@@ -4,23 +4,25 @@
 # STUDENT ID: whq8052
 import csv
 import subprocess
+import os
 
 users = []
 failed_users = []
-users_to_skip = []
 
 
-def create_user(EmployeeID, lastName, firstName, Office, Phone, Department, group):
+def create_user(EmployeeID, lastName, firstName, office, phone, Department, group):
     # creating the initial unique
     unique_user = str(firstName[0]) + lastName
     # check if adding extra digit beside user is required, if yes it will check how much to add and return required user
     username = is_unique_user(unique_user)
     if group == "office":
-        subprocess.run(f"useradd -m /home/{Department.lower()} -s csh -G {group} -p password -K PASS_MAX_DAYS=0 {username}",
-                       stdout=subprocess.PIPE)
+        subprocess.run(
+            f'useradd -m /home/{Department.lower()} -s csh -g {group} -p password -K PASS_MAX_DAYS=0 -c "{office},{phone}" "{username}"',
+            stdout=subprocess.PIPE)
     else:
-        subprocess.run(f"useradd -m /home/{Department.lower()} -G {group} -p password -K PASS_MAX_DAYS=0 {username}",
-                       stdout=subprocess.PIPE)
+        subprocess.run(
+            f'useradd -m /home/{Department.lower()} -g {group} -p password -K PASS_MAX_DAYS=0 -c "{office},{phone}" "{username}"',
+            stdout=subprocess.PIPE)
 
 
 def initializing_data():
@@ -62,13 +64,14 @@ def is_unique_user(unique_user):
     elif len(unique_que) == 1:  # means user already exist so add 1
         users.append(unique_user)
         return unique_user + "1"
-    else: # here user already have a number so easy to increament
+    else:  # here user already have a number so easy to increment
         users.append(unique_user)
         last_seen = unique_que.pop()[-1]
         return unique_user + str(int(last_seen) + 1)
 
 
 def main():
+    os.system("clear")  # CLEAR ALL PAST OUTPUTS
     # initializing_data()
     # print("----------------")
     # notify_missing_users()
