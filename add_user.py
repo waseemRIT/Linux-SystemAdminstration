@@ -10,13 +10,17 @@ failed_users = []
 users_to_skip = []
 
 
-def create_user(EmployeeID, LastName, FirstName, Office, Phone, Department, Group):
+def create_user(EmployeeID, lastName, firstName, Office, Phone, Department, group):
     # creating the initial unique
-    unique_user = str(FirstName[0]) + LastName
+    unique_user = str(firstName[0]) + lastName
     # check if adding extra digit beside user is required, if yes it will check how much to add and return required user
     username = is_unique_user(unique_user)
-    subprocess.run(f"useradd -m /home/{Department.lower()} -G {Group} -p password -K PASS_MAX_DAYS=0 {username}",
-                   stdout=subprocess.PIPE)
+    if group == "office":
+        subprocess.run(f"useradd -m /home/{Department.lower()} -s csh -G {group} -p password -K PASS_MAX_DAYS=0 {username}",
+                       stdout=subprocess.PIPE)
+    else:
+        subprocess.run(f"useradd -m /home/{Department.lower()} -G {group} -p password -K PASS_MAX_DAYS=0 {username}",
+                       stdout=subprocess.PIPE)
 
 
 def initializing_data():
