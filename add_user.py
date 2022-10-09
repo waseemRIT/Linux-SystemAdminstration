@@ -1,10 +1,11 @@
 #!/usr/bin/python3
 
 # STUDENT: WASEEM QAFFAF
-# STUDENT ID: whq8052
+
 # DATE 09/10/2022
 import csv
 import subprocess
+import shlex
 import os
 
 users = []
@@ -17,12 +18,17 @@ def create_user(EmployeeID, lastName, firstName, office, phone, Department, grou
     # check if adding extra digit beside user is required, if yes it will check how much to add and return required user
     username = is_unique_user(unique_user)
     if group == "office":
+        linux_command = shlex.split(
+            f'groupadd -f {group}; useradd -m /home/{Department.lower()} -s csh -g {group} -p password -K '
+            f'PASS_MAX_DAYS=0 -c "{office},{phone}" "{username}"')
         subprocess.run(
-            f'useradd -m /home/{Department.lower()} -s csh -g {group} -p password -K PASS_MAX_DAYS=0 -c "{office},{phone}" "{username}"',
+            linux_command,
             stdout=subprocess.PIPE)
     else:
+        linux_command = shlex.split(
+            f'groupadd -f {group}; useradd -m /home/{Department.lower()} -g {group} -p password -K PASS_MAX_DAYS=0 -c "{office},{phone}" "{username}"')
         subprocess.run(
-            f'useradd -m /home/{Department.lower()} -g {group} -p password -K PASS_MAX_DAYS=0 -c "{office},{phone}" "{username}"',
+            linux_command,
             stdout=subprocess.PIPE)
 
 
@@ -68,10 +74,10 @@ def is_unique_user(unique_user):
 
 def main():
     # os.system("clear")  # CLEAR ALL PAST OUTPUTS
-    # initializing_data()
-    # print("----------------")
-    # notify_missing_users()
-    pass
+    initializing_data()
+    print("----------------")
+    notify_missing_users()
+
 
 
 if __name__ == '__main__':
