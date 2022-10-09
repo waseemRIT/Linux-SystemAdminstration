@@ -2,6 +2,7 @@
 
 # STUDENT: WASEEM QAFFAF
 # STUDENT ID: whq8052
+# DATE 09/10/2022
 import csv
 import subprocess
 import os
@@ -32,7 +33,7 @@ def initializing_data():
 
         for i, row in enumerate(reader, start=1):
             if '' in row[:7]:
-                failed_users.append(f"user in line {i}, couldn't be added due to missing information")
+                failed_users.append(f"user in line {i} with ID {row[0]}, couldn't be added due to missing information")
                 continue
             # EXTRACTING USERS DATA
             EmployeeID = row[0]
@@ -53,31 +54,24 @@ def notify_missing_users():
 
 
 def is_unique_user(unique_user):
-    unique_que = []
-    for i in range(len(users) - 1):
-        if unique_user in users[i]:
-            unique_que.append(unique_user)
+    counter = 0  # check how many times user was repeated
+    users.append(unique_user)
+    for i in users:
+        if unique_user in i:
+            counter += 1
 
-    if len(unique_user) == 0:  # means first time getting the user, appends to users
-        users.append(unique_user)
+    if counter == 1:
         return unique_user
-    elif len(unique_que) == 1:  # means user already exist so add 1
-        users.append(unique_user)
-        return unique_user + "1"
-    else:  # here user already have a number so easy to increment
-        users.append(unique_user)
-        last_seen = unique_que.pop()[-1]
-        return unique_user + str(int(last_seen) + 1)
+    else:
+        return unique_user + str(counter - 1)
 
 
 def main():
-    os.system("clear")  # CLEAR ALL PAST OUTPUTS
+    # os.system("clear")  # CLEAR ALL PAST OUTPUTS
     # initializing_data()
     # print("----------------")
     # notify_missing_users()
-    x = [1, 2, 3, 4, 5]
-
-    print(len(x))
+    pass
 
 
 if __name__ == '__main__':
