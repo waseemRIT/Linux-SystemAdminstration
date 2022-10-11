@@ -19,14 +19,13 @@ def create_user(EmployeeID, lastName, firstName, office, phone, Department, grou
     username = is_unique_user(unique_user)
     if group == "office":
         linux_command = shlex.split(
-            f'groupadd -f {group}; useradd -m /home/{Department.lower()} -s csh -g {group} -p password -K '
-            f'PASS_MAX_DAYS=0 -c "{office},{phone}" "{username}"')
+            f'groupadd -f {group} && useradd -u {EmployeeID} -m -d /home/{Department.lower()} -s /usr/bin/csh -g {group} -c "{firstName} {lastName}, {office},{phone}" "{username}"  && sudo passwd -e {username} || echo "user couldn\'t be added due to system problem"')
         subprocess.run(
             linux_command,
             stdout=subprocess.PIPE)
     else:
         linux_command = shlex.split(
-            f'groupadd -f {group}; useradd -m /home/{Department.lower()} -g {group} -p password -K PASS_MAX_DAYS=0 -c "{office},{phone}" "{username}"')
+            f'groupadd -f {group} && useradd -u {EmployeeID} -m -d /home/{Department.lower()} -g {group} -c "{firstName} {lastName}, {office},{phone}" "{username}" && passwd -e {username} || echo "user couldn\'t be added due to system problem"')
         subprocess.run(
             linux_command,
             stdout=subprocess.PIPE)
