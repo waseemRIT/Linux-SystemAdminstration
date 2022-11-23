@@ -1,11 +1,14 @@
 #!/usr/bin/python3
-import os, subprocess
+import os
+import subprocess
+
 
 # STUDENT: WASEEM QAFFAF
 # STUDENT ID: whq8052
 # DATE 21/11/2022
 
-
+# INFORMING USER OF THEIR CURRENT PATH
+print(os.getcwd())
 # PATH OF THE HOME DIRECTORY, DEFINED GLOBALLY SINCE IT WILL BE THE SAME FOR ALL
 home = os.path.expanduser("~")
 # MOVES TO THE HOME DIRECTORY
@@ -40,11 +43,19 @@ def create_symlink():
 
 
 def delete_symlink():
-    subprocess.run(
-        [],
+    """
+    Function to delete a symlink
+    User Inputs SYMLINK FILE PATH
+    USER WILL BE NOTIFIED IF SYMLINK IS DELETED SUCCESSFULLY
+    """
+    symlink_to_delete = input("Insert Path to Symlink you want to remove:\n")
+
+    x = subprocess.run(
+        ["rm", symlink_to_delete],
         stdout=subprocess.PIPE
     )
-    pass
+    if x.returncode == 0:
+        print(f"{symlink_to_delete} deleted successfully !")
 
 
 def display_summary():
@@ -57,7 +68,7 @@ def display_summary():
 
 def main():
     user_option = input("Please insert one of the following options:\n1 to add a shortcut\n2 to remove a shortcut\n3 "
-                        "to get a summary of shortcuts in the home\nexit to stop execution of the program\n--> ")
+                        "to get a summary of shortcuts in the home\nquite to stop execution of the program\n--> ")
     user_option.lower()  # incase someone inserts eXit capital litters for the exit option!!
     if user_option == "1":
         # create shortcut/symbolic link Function
@@ -68,7 +79,7 @@ def main():
     elif user_option == "3":
         # Display summary function
         pass
-    elif user_option == "exit":
+    elif user_option == "quite":
         # To stop the execution of the program
         exit()
     else:
