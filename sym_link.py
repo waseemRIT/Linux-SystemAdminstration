@@ -62,21 +62,32 @@ def display_summary():
     Displays the name of the File
     Path of the Link
     """
+    counter = 0  # TO KEEP A COUNTER OF THE NUMBER OF FILES
     output = subprocess.Popen(  # To Find the List of Linked Files
         ["sudo", "find", home, "-type", "l"],
         stdout=subprocess.PIPE,
         universal_newlines=True
     )
-    counter = 0  # TO KEEP A COUNTER OF THE NUMBER OF FILES
     stdout, stderr = output.communicate()  # TO GET THE OUTPUT OF THE CODE
-    for line in stdout.splitlines():  # SPLITTING THE LINES SO WE COULD LOOP OVER THEM
-        fileName = line.split("/")  # TO GET THE NAME OF THE FILE SPLIT INTO A LIST
-        print(f"Linked File Name is: {fileName[-1]}")  # PRINTING LAST INDEX OF LIST SINCE LAST INDEX IS THE NAME OF
-        # FILE
-        print(f"Path to {fileName[-1]} is:")
-        print(line)  # PRINTS THE FULL PATH TO THE LINKED FILE
-        counter += 1  # INCREMENTING THE COUNTER OF LINKED FILES
-    print(f"\nTHE NUMBER OF SYMLINKS AVAILABLE IS {counter}")
+    if stdout.splitlines():  # CHECK IF THERE ARE LINKED FILE IN FIRST PLACE
+        for line in stdout.splitlines():  # SPLITTING THE LINES SO WE COULD LOOP OVER THEM
+            original_path = subprocess.Popen(
+                ["readlink", "-f", line],
+                stdout=subprocess.PIPE,
+                universal_newlines=True
+            )
+            origin, stderr = original_path.communicate()  # TO GET THE ORIGINAL PATH OF THE LINKED PATH
+
+            fileName = line.split("/")  # TO GET THE NAME OF THE FILE SPLIT INTO A LIST
+            # PRINTING LAST INDEX OF LIST SINCE LAST INDEX IS THE NAME OF FILE
+            print(f"Linked File Name is: {fileName[-1]}")
+            print(f"{fileName[-1]} is linked to {origin}", end="")
+            print(f"Path to {fileName[-1]} is:")
+            print(line, end="\n\n")  # PRINTS THE FULL PATH TO THE LINKED FILE
+            counter += 1  # INCREMENTING THE COUNTER OF LINKED FILES
+        print(f"\nTHE NUMBER OF SYMLINKS AVAILABLE IS {counter}")
+    else:
+        print("There are 0 Linked Files")
 
 
 def main():
@@ -110,4 +121,3 @@ if __name__ == '__main__':
     os.system("clear")  # TO CLEAR THE SCREEN IN THE  BEGGING OF THE PROGRAM
     while True:
         main()
-
