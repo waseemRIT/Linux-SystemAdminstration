@@ -51,7 +51,7 @@ def delete_symlink():
     try:
         os.unlink(symlink_to_delete)  # TO UNLINK THE SYMLINK
         print(f"{symlink_to_delete} deleted successfully !")  # DISPLAY TO USER THAT IT IS UNLINKED IS SUCCESSFULLY
-    except FileNotFoundError():  # JUST IN CASE USER GIVES A NON-EXISTENT FILE, NOTIFYING USER
+    except Exception:  # JUST IN CASE USER GIVES A NON-EXISTENT FILE, NOTIFYING USER
         print(f"{symlink_to_delete} doesn't exist\nPlease Insert A Valid SymLink")
 
 
