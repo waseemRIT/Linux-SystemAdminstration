@@ -5,34 +5,42 @@
 import re
 
 from geoip import geolite2
-import os
-import ipaddress
-
-myAuthlog = open('syslog.log', 'r')  # open the syslog.log for reading
-
-ips_list = []
-# with open("syslog.log") as f:
-#    data = f.read()
-#
-# address_ipv4 = re.findall(r"\b(\d{1,3}\.){3}\d{1,3}\b", data)
-#
-# print(address_ipv4)
+import requests
+import re
 
 
-for line in myAuthlog:  # loop to extract the IP address
-    x = re.search("((\d\d?|[01]\d\d|2([0-4]\d|5[0-5]))\.){3}(\d\d?|[01]\d\d|2([0-4]\d|5[0-5]))", line)
-    if x:
-        ips_list.append(x.group())
+def get_location(ip_address):
+    response = requests.get(f'https://ipapi.co/{ip_address}/json/').json()
+    return response.get("country_name")
 
-ips_set = set(ips_list)  # removes duplicates
+
+s = r"(%s)" % ("\.".join(['(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)'] * 4))
+patt = re.compile(s)
+fn = "syslog.log"
+s = open(fn).read()
+i = 0
+ip_list = []
+
+while True:
+    m = patt.search(s, i)
+    if m:
+        ip_list.append(m.group(1))
+        i = m.end() + 1
+    else:
+        break
+
+ips_set = set(ip_list)  # removes duplicates
 
 for unique_ip in ips_set:
     counter = 0
-    for ip in ips_list:
+    for ip in ip_list:
         if ip == unique_ip:
             counter += 1
     if counter >= 10:
-        print(f"{unique_ip} is repeated {counter} times")
+        # print(f"{unique_ip} is repeated {counter} times")
+        pass
+    counter = 0
+print(get_location("162.135.10.255"))
 
 
 def main():
