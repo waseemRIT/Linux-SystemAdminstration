@@ -53,8 +53,8 @@ for w in sorted_keys:
     sorted_ip_count[w] = ip_dict_ten_and_more[w]
 
 for addr, count in sorted_ip_count.items():
-    # print(f"{count:<10}\t{addr:<10}\t{geolite2.lookup(ip):}")
-    print(f"{count:<10}\t{addr:<10}")
+    print(f"{count:<10}\t{addr:<20}\t{geolite2.lookup(addr).country:}")
+
 
 
 
