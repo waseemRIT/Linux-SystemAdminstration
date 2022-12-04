@@ -45,9 +45,16 @@ for ip, count in ip_dict.items(): # store ip occurrence of 10+ times
         ip_dict_ten_and_more[ip] = count
 
 # print(ip_dict_ten_and_more)
-for addr, count in ip_dict_ten_and_more.items():
-    print(f"{count:<10}\t{addr:<10}\t{geolite2.lookup(ip):}")
 
+sorted_ip_count = {}
+sorted_keys = sorted(ip_dict_ten_and_more, key=ip_dict_ten_and_more.get)  # [1, 3, 2]
+
+for w in sorted_keys:
+    sorted_ip_count[w] = ip_dict_ten_and_more[w]
+
+for addr, count in sorted_ip_count.items():
+    # print(f"{count:<10}\t{addr:<10}\t{geolite2.lookup(ip):}")
+    print(f"{count:<10}\t{addr:<10}")
 
 
 
